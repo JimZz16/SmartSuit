@@ -1,26 +1,15 @@
 package com.example.vaney.smartsuit;
 
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PointF;
 import android.media.AudioManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.media.ToneGenerator;
-import android.net.Uri;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
-import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -29,7 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.TimeUnit;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class RealTimeAnimation extends AppCompatActivity{
 
@@ -37,12 +28,19 @@ public class RealTimeAnimation extends AppCompatActivity{
     private int aM, aC, aH, beginValueM, beginValueC, beginValueH, value = 0;
     private TextView textM, textC, textH, textMhide, textChide, textHhide, textMhideMax, textChideMax, textHhideMax, textMhideMin, textChideMin, textHhideMin;
     private EditText range;
-    private CheckBox box, sound, RangeSimpleView;
+    private CheckBox box, sound, RangeSimpleView, file1, file2, file3;
     private RelativeLayout layout;
+    private Button save;
     private int getBottomM, getLeftM, getBottomC, getLeftC, getBottomH, getLeftH, PositionC7, PositionHead, pixelsSmall, pixelsSmall2;
     private final int BeginPos = -15;
     private final int BeginPosHead = -5;
-    private int rangeNum, PosHead1, PosHead2, PosHead3, PosC1, PosC2, SoundNumM, SoundNumC, SoundNumH = 0;
+    private int toggle, rangeNum, PosHead1, PosHead2, PosHead3, PosC1, PosC2, SoundNumM, SoundNumC, SoundNumH = 0;
+
+    private String file_name1 = "file1";
+    private String file_name2 = "file2";
+    private String file_name3 = "file3";
+    private String file_name = file_name1;
+    private String message = "";
 
     final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
 
@@ -81,6 +79,11 @@ public class RealTimeAnimation extends AppCompatActivity{
         box = (CheckBox) findViewById(R.id.checkBox);
         sound = (CheckBox) findViewById(R.id.sound);
         RangeSimpleView = (CheckBox) findViewById(R.id.SimpleView);
+        file1 = (CheckBox) findViewById(R.id.check1);
+        file2 = (CheckBox) findViewById(R.id.check2);
+        file3 = (CheckBox) findViewById(R.id.check3);
+
+        save = (Button) findViewById(R.id.load);
 
         layout = (RelativeLayout) findViewById(R.id.LayoutShowHide);
 
@@ -106,6 +109,7 @@ public class RealTimeAnimation extends AppCompatActivity{
 
         setVisibilityRange();
         setRotation();
+        filesCheckbox();
     }
 
     public void startButton(View view){
@@ -189,42 +193,55 @@ public class RealTimeAnimation extends AppCompatActivity{
 
             }
         });
+
     }
 
     public  void meerMidback(View view){
         textM = (TextView) findViewById(R.id.MidbackText);
         aM++;
         textM.setText(Integer.toString(aM));
+
+        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
     }
 
     public  void minderMidback(View view){
         textM = (TextView) findViewById(R.id.MidbackText);
         aM--;
         textM.setText(Integer.toString(aM));
+
+        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
     }
 
     public  void meerC7(View view){
         textC = (TextView) findViewById(R.id.C7Text);
         aC++;
         textC.setText(Integer.toString(aC));
+
+        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
     }
 
     public  void minderC7(View view){
         textC = (TextView) findViewById(R.id.C7Text);
         aC--;
         textC.setText(Integer.toString(aC));
+
+        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
     }
 
     public  void meerHead(View view){
         textH = (TextView) findViewById(R.id.HeadText);
         aH++;
         textH.setText(Integer.toString(aH));
+
+        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
     }
 
     public  void minderHead(View view){
         textH = (TextView) findViewById(R.id.HeadText);
         aH--;
         textH.setText(Integer.toString(aH));
+
+        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
     }
 
 
@@ -560,6 +577,80 @@ public class RealTimeAnimation extends AppCompatActivity{
         BaseM.setRotation(BeginPos );
         BaseC.setRotation(BeginPos );
         BaseH.setRotation(BeginPosHead );
+    }
+
+    public void  filesCheckbox(){
+        file1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(file1.isChecked()) {
+                    if(file2.isChecked()){
+                        file2.toggle();
+                    }
+                    if(file3.isChecked()){
+                        file3.toggle();
+                    }
+                }
+
+                file_name = file_name1;
+            }
+        });
+
+        file2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(file2.isChecked()) {
+                    if(file3.isChecked()){
+                        file3.toggle();
+                    }
+                    if(file1.isChecked()){
+                        file1.toggle();
+                    }
+                }
+                file_name = file_name2;
+            }
+        });
+
+        file3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(file3.isChecked()) {
+                    if(file2.isChecked()){
+                        file2.toggle();
+                    }
+                    if(file1.isChecked()){
+                        file1.toggle();
+                    }
+                }
+                file_name = file_name3;
+            }
+        });
+    }
+
+    public void save(View v) {
+
+        if(toggle == 0){
+            save.setText("Stop");
+            message = "-";
+            toggle = 1;
+        }else if(toggle == 1){
+            try {
+                FileOutputStream fileOutputStream = openFileOutput(file_name, MODE_PRIVATE);
+                fileOutputStream.write(message.getBytes());
+                fileOutputStream.close();
+                Toast.makeText(this, "Saved to " + getFilesDir() + "/" + file_name,
+                        Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            message = "-";
+            save.setText("Start");
+            toggle = 0;
+        }
+
     }
 
     public void BackToMainMenu(View view){
