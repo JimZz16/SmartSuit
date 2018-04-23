@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundGrey"
+    tools:context="com.example.vaney.smartsuit.CalibrateStep1">
+
+    <include
+        android:id="@+id/app_bar"
+        layout = "@layout/app_bar">
+    </include>
+
+    <Button
+        android:id="@+id/StartStep1"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/Step1Info"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/oval"
+        android:onClick="StartStep1"
+        android:text="@string/start"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="109dp"
+        tools:layout_editor_absoluteY="137dp" />
+
+    <Button
+        android:id="@+id/Step1Info"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/circle"
+        android:onClick="InfoStep1"
+        android:text="?"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/countdown"
+        android:paddingLeft="5dp"
+        android:text="@string/_10_sec"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/countdown"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="italic" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp"
+        app:srcCompat="@drawable/verticalstand1" />
+
+
+</RelativeLayout>

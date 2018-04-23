@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundGrey"
+    tools:context="com.example.vaney.smartsuit.MainActivity">
+
+    <include
+        android:id="@+id/app_bar"
+        layout = "@layout/app_bar">
+    </include>
+
+    <Button
+        android:id="@+id/calibrate"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/oval"
+        android:onClick="calibrate"
+        android:text="@string/calibrate"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignEnd="@+id/calibrate"
+        android:layout_below="@+id/calibrate"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/oval"
+        android:onClick="start"
+        android:text="@string/start"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/usermanual"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignEnd="@+id/calibrate"
+        android:layout_below="@+id/start"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/oval"
+        android:onClick="UserManual"
+        android:text="@string/user_manual"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/Exit"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignEnd="@+id/calibrate"
+        android:layout_below="@+id/usermanual"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/oval"
+        android:onClick="exit"
+        android:text="@string/exit"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/calibrate"
+        android:alpha=".65"
+        app:srcCompat="@drawable/bike" />
+
+
+</RelativeLayout>

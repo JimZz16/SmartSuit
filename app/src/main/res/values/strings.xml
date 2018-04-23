@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Smart Suit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="calibrate">calibrate</string>
+    <string name="start">start</string>
+    <string name="user_manual">user manual</string>
+    <string name="exit">Exit</string>
+    <string name="_10_sec">10 sec.</string>
+    <string name="countdown">Countdown:</string>
+    <string name="_07_sec">07 sec.</string>
+    <string name="_0">0</string>
+    <string name="range">Range (°):</string>
+    <string name="advanced">Advanced</string>
+    <string name="rangeCheckbox">Range</string>
+    <string name="sound">Sound</string>
+    <string name="midback">Midback</string>
+    <string name="current_0">Current: 0</string>
+    <string name="min_0">Min: 0</string>
+    <string name="max_0">Max: 0</string>
+    <string name="c7">C7</string>
+    <string name="head">Head</string>
+    <string name="_1_calibrate_button">1 Calibrate (button):</string>
+    <string name="Textcalibrate">With this button you will enter the first activity of the calibration process (step 1). Press this button if the smart suit needs to be calibrated.</string>
+    <string name="calibration_process_step_1">Calibration process step 1:</string>
+    <string name="Textcalibrate1">Within this activity you will have to hold the smart suit vertically (all 4 sensors) for 10 seconds after pressing the startbutton. If this is done you will go automatically to the second step of the calibration process.</string>
+    <string name="calibration_process_step_2">Calibration process step 2:</string>
+    <string name="Textcalibrate2">After finishing the first step you will arrive at the second step of the calibration process. This step needs to be done within 7 seconds. First you have to hold the smart suit vertically (all 4 sensors). When you press the startbutton you must bend the 3 upper sensors to 90 degrees and go immediately back to the vertical start postion in a smooth movement.  This step will go automatically to the real-time activity.</string>
+    <string name="_2_start_button">2 Start (button):</string>
+    <string name="Textstart">If the smart suit doesn\'t need to be calibrated, press this button and it will go immediately to the real-time activity.</string>
+    <string name="_3_exit_button">3 Exit (button):</string>
+    <string name="Textexit">This will leave the Smart Suit app.</string>
+    <string name="_4_real_time_data_activity">4 Real-time data (activity):</string>
+    <string name="TextRealTime">The smart suit will send real-time data to this activity and it will visualize the position of the cyclist.  What is in this activity?</string>
+    <string name="SubTextRealTime">- Range (input): You can change the range, when you go above/below the range you will hear a beep sound (max. range=35, min. range=5). - Sound (checkbox): Uncheck this box if you don\'t want to hear a beep sound if the range gets exceeded. - Range (checkbox): Check this box if you want to see the range lines (all 3 sensors are individual) If this box is unchecked than all the 3 sensors are working together and they will simulate a human body (midback, C7, head). - Advanced (checkbox): Uncheck this if you dont want to see the advanced data. - Start (button): This will set the baseline dots, reset the position to zero and set the range. - Exit (button): Go back to the main menu. - Data visualisation: The data will be visualized in this activity.</string>
+    <string name="back">Back</string>
+    <string name="PopupHead1">Start with step 1 of the calibration process</string>
+    <string name="PopupText1">Hold the smart suit vertically (all 4 sensors) for 10 seconds after pressing the startbutton. If this is done you will go automatically to the second step of the calibration process.</string>
+    <string name="PopupHead2">Start with step 2 of the calibration process</string>
+    <string name="PopupText2">First you have to hold the smart suit vertically (all 4 sensors). When you press the startbutton you must bend the 3 upper sensors to 90 degrees and go immediately back to the vertical start postion in a smooth movement.</string>
+</resources>
