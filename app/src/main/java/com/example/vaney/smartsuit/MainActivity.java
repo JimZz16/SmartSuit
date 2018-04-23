@@ -32,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void LoadData(View view){
+        Intent intent = new Intent(MainActivity.this, LoadData.class);
+        startActivity(intent);
+    }
+
     public void exit(View view){
         finish();
         moveTaskToBack(true);
