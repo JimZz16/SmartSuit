@@ -34,6 +34,7 @@ public class RealTimeAnimation extends AppCompatActivity{
     private int getBottomM, getLeftM, getBottomC, getLeftC, getBottomH, getLeftH, PositionC7, PositionHead, pixelsSmall, pixelsSmall2;
     private final int BeginPos = -15;
     private final int BeginPosHead = -5;
+    private int diffM, diffC, diffH = 0;
     private int toggle, rangeNum, PosHead1, PosHead2, PosHead3, PosC1, PosC2, SoundNumM, SoundNumC, SoundNumH = 0;
 
     private String file_name1 = "file1";
@@ -75,6 +76,7 @@ public class RealTimeAnimation extends AppCompatActivity{
         textMhideMin = (TextView) findViewById(R.id.MidbackMin);
         textChideMin = (TextView) findViewById(R.id.C7Min);
         textHhideMin = (TextView) findViewById(R.id.HeadMin);
+        range = (EditText) findViewById(R.id.Range);
 
         box = (CheckBox) findViewById(R.id.checkBox);
         sound = (CheckBox) findViewById(R.id.sound);
@@ -117,7 +119,6 @@ public class RealTimeAnimation extends AppCompatActivity{
         setBaseline();
         setCurrentDataZero();
 
-        range = (EditText) findViewById(R.id.Range);
         if(range.getText().toString().matches("")){
             rangeNum = 0;
         }else{
@@ -201,7 +202,7 @@ public class RealTimeAnimation extends AppCompatActivity{
         aM++;
         textM.setText(Integer.toString(aM));
 
-        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        message += " " + Integer.toString(diffM) + "     " + Integer.toString(diffC) + "     " + Integer.toString(diffH) + "\n";
     }
 
     public  void minderMidback(View view){
@@ -209,7 +210,8 @@ public class RealTimeAnimation extends AppCompatActivity{
         aM--;
         textM.setText(Integer.toString(aM));
 
-        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        //message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        message += " " + Integer.toString(diffM) + "     " + Integer.toString(diffC) + "     " + Integer.toString(diffH) + "\n";
     }
 
     public  void meerC7(View view){
@@ -217,7 +219,7 @@ public class RealTimeAnimation extends AppCompatActivity{
         aC++;
         textC.setText(Integer.toString(aC));
 
-        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        message += " " + Integer.toString(diffM) + "     " + Integer.toString(diffC) + "     " + Integer.toString(diffH) + "\n";
     }
 
     public  void minderC7(View view){
@@ -225,7 +227,7 @@ public class RealTimeAnimation extends AppCompatActivity{
         aC--;
         textC.setText(Integer.toString(aC));
 
-        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        message += " " + Integer.toString(diffM) + "     " + Integer.toString(diffC) + "     " + Integer.toString(diffH) + "\n";
     }
 
     public  void meerHead(View view){
@@ -233,7 +235,7 @@ public class RealTimeAnimation extends AppCompatActivity{
         aH++;
         textH.setText(Integer.toString(aH));
 
-        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        message += " " + Integer.toString(diffM) + "     " + Integer.toString(diffC) + "     " + Integer.toString(diffH) + "\n";
     }
 
     public  void minderHead(View view){
@@ -241,13 +243,14 @@ public class RealTimeAnimation extends AppCompatActivity{
         aH--;
         textH.setText(Integer.toString(aH));
 
-        message += " " + Integer.toString(aM) + " " + Integer.toString(aC) + " " + Integer.toString(aH) + " -";
+        message += " " + Integer.toString(diffM) + "     " + Integer.toString(diffC) + "     " + Integer.toString(diffH) + "\n";
     }
 
 
     public void settingsM(int range){
         value = Integer.parseInt(textM.getText().toString());
         int diff = (value - beginValueM);
+        diffM = (value - beginValueM);
 
         if(RangeSimpleView.isChecked()){
             if (diff <= 45 && diff >= -45) {
@@ -317,6 +320,7 @@ public class RealTimeAnimation extends AppCompatActivity{
     public void settingsC(int range){
         value = Integer.parseInt(textC.getText().toString());
         int diff = (value - beginValueC);
+        diffC = (value - beginValueC);
 
         if(RangeSimpleView.isChecked()) {
             if (diff <= 45 && diff >= -45) {
@@ -384,6 +388,7 @@ public class RealTimeAnimation extends AppCompatActivity{
     public void settingsH(int range) {
         value = Integer.parseInt(textH.getText().toString());
         int diff = (value - beginValueH);
+        diffH = (value - beginValueH);
 
         if(RangeSimpleView.isChecked()){
             if(diff <= 45 && diff >= -45) {
@@ -568,6 +573,10 @@ public class RealTimeAnimation extends AppCompatActivity{
         textMhide.setText("Current: "+Integer.toString(0));
         textChide.setText("Current: "+Integer.toString(0));
         textHhide.setText("Current: "+Integer.toString(0));
+
+        diffM = 0;
+        diffC = 0;
+        diffH = 0;
     }
 
     public void setRotation(){
@@ -631,7 +640,7 @@ public class RealTimeAnimation extends AppCompatActivity{
 
         if(toggle == 0){
             save.setText("Stop");
-            message = "-";
+            message = "";
             toggle = 1;
         }else if(toggle == 1){
             try {
@@ -647,7 +656,7 @@ public class RealTimeAnimation extends AppCompatActivity{
             }
 
             message = "-";
-            save.setText("Start");
+            save.setText("Record");
             toggle = 0;
         }
 

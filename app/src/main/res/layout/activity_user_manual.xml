@@ -152,10 +152,30 @@
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/HeadTextSavedData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TextRealTime2"
+            android:text="@string/_5_saved_data_button"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/TextSavedData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/HeadTextSavedData"
+            android:layout_marginLeft="10dp"
+            android:text="@string/TextSavedData"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
         <Button
             android:layout_width="60dp"
             android:layout_height="40dp"
-            android:layout_below="@+id/TextRealTime2"
+            android:layout_below="@+id/TextSavedData"
             android:layout_centerHorizontal="true"
             android:background="@drawable/oval"
             android:onClick="BackToMainMenu"
