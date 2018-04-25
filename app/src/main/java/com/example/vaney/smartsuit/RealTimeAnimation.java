@@ -137,11 +137,13 @@ public class RealTimeAnimation extends AppCompatActivity{
 
         if(rangeNum >= 20){
             pixelsSmall = 1;
-            pixelsSmall2 = 2;
+            pixelsSmall2 = 3;
         }else if(rangeNum < 20){
             pixelsSmall = 2;
-            pixelsSmall2 = 3;
+            pixelsSmall2 = 4;
         }
+
+
         setRange(rangeNum);
 
         textM.addTextChangedListener(new TextWatcher() {
@@ -639,7 +641,7 @@ public class RealTimeAnimation extends AppCompatActivity{
     public void save(View v) {
 
         if(toggle == 0){
-            save.setText("Stop");
+            save.setBackgroundResource(R.drawable.stoprectwee);
             message = "";
             toggle = 1;
         }else if(toggle == 1){
@@ -656,7 +658,7 @@ public class RealTimeAnimation extends AppCompatActivity{
             }
 
             message = "-";
-            save.setText("Record");
+            save.setBackgroundResource(R.drawable.rectwee);
             toggle = 0;
         }
 

@@ -22,7 +22,7 @@
         android:background="@drawable/oval"
         android:onClick="StartStep1"
         android:text="@string/start"
-        android:textSize="18sp"
+        android:textSize="16sp"
         tools:layout_editor_absoluteX="109dp"
         tools:layout_editor_absoluteY="137dp" />
 
@@ -41,10 +41,9 @@
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/countdown"
+        android:layout_below="@+id/StartStep1"
+        android:layout_toEndOf="@+id/Step1Info"
         android:paddingLeft="5dp"
-        android:text="@string/_10_sec"
         android:textColor="@android:color/black"
         android:textSize="22sp"
         android:textStyle="italic" />
@@ -53,9 +52,8 @@
         android:id="@+id/countdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:text="@string/countdown"
+        android:layout_alignEnd="@+id/Step1Info"
+        android:layout_below="@+id/StartStep1"
         android:textColor="@android:color/black"
         android:textSize="22sp"
         android:textStyle="italic" />

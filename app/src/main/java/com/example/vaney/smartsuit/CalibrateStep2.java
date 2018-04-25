@@ -8,13 +8,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
 public class CalibrateStep2 extends AppCompatActivity {
 
-    TextView timer;
+    private TextView timer, countdown;
+    private Button start;
     private Handler mHandler = new Handler();
 
     String TimeLeftText = null;
@@ -23,6 +25,10 @@ public class CalibrateStep2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibrate_step2);
+
+        timer = (TextView) findViewById(R.id.timer);
+        countdown = (TextView) findViewById(R.id.countdown);
+        start = (Button) findViewById(R.id.StartStep2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
@@ -39,8 +45,9 @@ public class CalibrateStep2 extends AppCompatActivity {
 
     public void StartStep2(View view){
         //CountdownTimer
-        timer = (TextView) findViewById(R.id.timer);
-        timer.setText(TimeLeftText);
+        countdown.setText("Countdown:");
+        timer.setText("07 sec.");
+        start.setText("In Progress");
 
         new CountDownTimer(7000, 1000) { // adjust the milli seconds here
             public void onTick(long millisUntilFinished) {
