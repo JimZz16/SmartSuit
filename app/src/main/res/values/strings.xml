@@ -40,5 +40,5 @@
     <string name="PopupHead2">Start with step 2 of the calibration process</string>
     <string name="PopupText2">First you have to hold the smart suit vertically (all 4 sensors). When you press "start" you must bend the 3 upper sensors to 90 degrees and go immediately back to the vertical start postion in a smooth movement.</string>
     <string name="_5_saved_data_button">5 Saved Data (button)</string>
-    <string name="TextSavedData">Here you can read the saved data from the 3 files (file 1, file 2, file 3). The data can be saved in the real-time data activity.</string>
+    <string name="TextSavedData">Here you can read the saved data from the last uploaded file. The data can be saved in the real-time data activity (REC/STOP button on the pedals of the bike).</string>
 </resources>

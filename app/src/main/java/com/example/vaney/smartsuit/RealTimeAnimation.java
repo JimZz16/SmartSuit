@@ -1,9 +1,16 @@
 package com.example.vaney.smartsuit;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +18,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -37,7 +47,7 @@ import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class RealTimeAnimation extends AppCompatActivity {
+public class RealTimeAnimation extends AppCompatActivity implements LocationListener {
 
     private ImageView MaxM, MinM, MaxC, MinC, MaxH, MinH, BaseM, BaseC, BaseH, dotM, dotC, dotH, logo;
     private int aM, aC, aH, beginValueM, beginValueC, beginValueH, value = 0;
@@ -45,7 +55,7 @@ public class RealTimeAnimation extends AppCompatActivity {
     private EditText range;
     private CheckBox box, sound, RangeSimpleView, file1, file2, file3;
     private RelativeLayout layout;
-    private Button save;
+    private Button save, start;
     private int getBottomM, getLeftM, getBottomC, getLeftC, getBottomH, getLeftH, PositionC7, PositionHead, pixelsSmall, pixelsSmall2;
     private final int BeginPos = -15;
     private final int BeginPosHead = -5;
@@ -53,11 +63,16 @@ public class RealTimeAnimation extends AppCompatActivity {
     private int toggle, rangeNum, PosHead1, PosHead2, PosHead3, PosC1, PosC2, SoundNumM, SoundNumC, SoundNumH = 0;
 
     private String file_name1 = "file1";
-    public String message = "";
+    private String message = "";
+    private String messageSensors = "";
+    private String messageLocation = "Coördinaten locatie: ";
+
     public String urlnaam = "http://11502348.pxl-ea-ict.be/DataSmartSuit/CreateFileWrite.php";
 
-
     final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+
+    LocationManager locationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +112,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         RangeSimpleView = (CheckBox) findViewById(R.id.SimpleView);
 
         save = (Button) findViewById(R.id.load);
+        start = (Button) findViewById(R.id.start);
 
         layout = (RelativeLayout) findViewById(R.id.LayoutShowHide);
 
@@ -113,6 +129,14 @@ public class RealTimeAnimation extends AppCompatActivity {
             }
         });
 
+        //Animation blink start button
+        Animation mAnimation = new AlphaAnimation(2, 0);
+        mAnimation.setDuration(500);
+        mAnimation.setInterpolator(new LinearInterpolator());
+        mAnimation.setRepeatCount(Animation.INFINITE);
+        mAnimation.setRepeatMode(Animation.REVERSE);
+        start.startAnimation(mAnimation);
+
         getBottomM = ((ViewGroup.MarginLayoutParams) dotM.getLayoutParams()).bottomMargin;
         getLeftM = ((ViewGroup.MarginLayoutParams) dotM.getLayoutParams()).leftMargin;
         getBottomC = ((ViewGroup.MarginLayoutParams) dotC.getLayoutParams()).bottomMargin;
@@ -122,9 +146,12 @@ public class RealTimeAnimation extends AppCompatActivity {
 
         setVisibilityRange();
         setRotation();
+        checkPermissionLocation();
     }
 
     public void startButton(View view) {
+        view.clearAnimation();
+
         setReset();
         setBaseline();
         setCurrentDataZero();
@@ -214,7 +241,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         aM++;
         textM.setText(Integer.toString(aM));
 
-        message += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderMidback(View view) {
@@ -222,7 +249,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         aM--;
         textM.setText(Integer.toString(aM));
 
-        message += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void meerC7(View view) {
@@ -230,7 +257,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         aC++;
         textC.setText(Integer.toString(aC));
 
-        message += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderC7(View view) {
@@ -238,7 +265,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         aC--;
         textC.setText(Integer.toString(aC));
 
-        message += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void meerHead(View view) {
@@ -246,7 +273,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         aH++;
         textH.setText(Integer.toString(aH));
 
-        message += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderHead(View view) {
@@ -254,7 +281,7 @@ public class RealTimeAnimation extends AppCompatActivity {
         aH--;
         textH.setText(Integer.toString(aH));
 
-        message += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
 
@@ -599,15 +626,25 @@ public class RealTimeAnimation extends AppCompatActivity {
         BaseH.setRotation(BeginPosHead);
     }
 
+    public void checkPermissionLocation(){
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }
+    }
+
     public void save(View v) {
 
         if (toggle == 0) {
             save.setBackgroundResource(R.drawable.stoprectwee);
+            message = "";
+            messageSensors = "Sensor data: ";
+            messageLocation = "Coördinaten locatie: ";
+            getLocation();
             toggle = 1;
         } else if (toggle == 1) {
             try {
                 FileOutputStream fileOutputStream = openFileOutput(file_name1, MODE_PRIVATE);
-                fileOutputStream.write(message.getBytes());
+                fileOutputStream.write(messageSensors.getBytes());
                 fileOutputStream.close();
                 Toast.makeText(this, "Uploading to server", Toast.LENGTH_LONG).show();
             } catch (FileNotFoundException e) {
@@ -628,7 +665,39 @@ public class RealTimeAnimation extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //This code is for uploading to server
+    //Get location and put it in String messageLocation// -> Location methods
+    void getLocation() {
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, this);
+        }
+        catch(SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        messageLocation += location.getLatitude() + ", " + location.getLongitude() + " / ";
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Toast.makeText(RealTimeAnimation.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    //This code is for uploading the data to the server// -> Upload methods
     public class SendRequest extends AsyncTask<String, Void, String> {
 
         protected void onPreExecute() {
@@ -640,6 +709,8 @@ public class RealTimeAnimation extends AppCompatActivity {
                 URL url = new URL(urlnaam);
 
                 JSONObject postDataParams = new JSONObject();
+
+                message = messageSensors + " " + messageLocation;
 
                 postDataParams.put("var", message.toString());
 
@@ -662,7 +733,7 @@ public class RealTimeAnimation extends AppCompatActivity {
                 os.close();
 
                 //After uploading make String empty
-                message = "";
+                messageSensors = "";
 
                 int responseCode = conn.getResponseCode();
 
