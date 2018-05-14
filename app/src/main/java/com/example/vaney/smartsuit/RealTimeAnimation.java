@@ -1,6 +1,8 @@
 package com.example.vaney.smartsuit;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,8 +11,10 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,6 +34,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,8 +57,9 @@ import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class RealTimeAnimation extends AppCompatActivity implements LocationListener {
+public class RealTimeAnimation extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
+    private static final String TAG = "MainActivity";
     private ImageView MaxM, MinM, MaxC, MinC, MaxH, MinH, BaseM, BaseC, BaseH, dotM, dotC, dotH, logo;
     private int aM, aC, aH, beginValueM, beginValueC, beginValueH, value = 0;
     private TextView textM, textC, textH, textMhide, textChide, textHhide, textMhideMax, textChideMax, textHhideMax, textMhideMin, textChideMin, textHhideMin;
@@ -66,12 +77,16 @@ public class RealTimeAnimation extends AppCompatActivity implements LocationList
     private String message = "";
     private String messageSensors = "";
     private String messageLocation = "Coördinaten locatie: ";
+    private GoogleApiClient mGoogleApiClient;
+
 
     public String urlnaam = "http://11502348.pxl-ea-ict.be/DataSmartSuit/CreateFileWrite.php";
 
     final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
 
-    LocationManager locationManager;
+    private LocationManager locationManager;
+    private Location mLocation;
+    private LocationRequest mLocationRequest;
 
 
     @Override
@@ -129,6 +144,16 @@ public class RealTimeAnimation extends AppCompatActivity implements LocationList
             }
         });
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        checkLocation();
+
         //Animation blink start button
         Animation mAnimation = new AlphaAnimation(2, 0);
         mAnimation.setDuration(500);
@@ -146,7 +171,7 @@ public class RealTimeAnimation extends AppCompatActivity implements LocationList
 
         setVisibilityRange();
         setRotation();
-        checkPermissionLocation();
+        //checkPermissionLocation();
     }
 
     public void startButton(View view) {
@@ -626,12 +651,6 @@ public class RealTimeAnimation extends AppCompatActivity implements LocationList
         BaseH.setRotation(BeginPosHead);
     }
 
-    public void checkPermissionLocation(){
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-        }
-    }
-
     public void save(View v) {
 
         if (toggle == 0) {
@@ -639,12 +658,12 @@ public class RealTimeAnimation extends AppCompatActivity implements LocationList
             message = "";
             messageSensors = "Sensor data: ";
             messageLocation = "Coördinaten locatie: ";
-            getLocation();
+            //getLocation();
             toggle = 1;
         } else if (toggle == 1) {
             try {
                 FileOutputStream fileOutputStream = openFileOutput(file_name1, MODE_PRIVATE);
-                fileOutputStream.write(messageSensors.getBytes());
+                fileOutputStream.write((messageSensors + " " + messageLocation).getBytes());
                 fileOutputStream.close();
                 Toast.makeText(this, "Uploading to server", Toast.LENGTH_LONG).show();
             } catch (FileNotFoundException e) {
@@ -666,36 +685,117 @@ public class RealTimeAnimation extends AppCompatActivity implements LocationList
     }
 
     //Get location and put it in String messageLocation// -> Location methods
-    void getLocation() {
-        try {
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, this);
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
-        catch(SecurityException e) {
-            e.printStackTrace();
+
+        startLocationUpdates();
+
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if(mLocation == null){
+            startLocationUpdates();
         }
+        if (mLocation != null) {
+
+        } else {
+            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Connection Suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    protected void startLocationUpdates() {
+        // Create the location request
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                .setInterval(1000)
+                .setFastestInterval(1000); //After 1 second update location data
+        // Request location updates
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                mLocationRequest, this);
+        Log.d("reque", "--->>>>");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        messageLocation += location.getLatitude() + ", " + location.getLongitude() + " / ";
 
+        String msg = "Updated Location: " +
+                Double.toString(location.getLatitude()) + "," +
+                Double.toString(location.getLongitude());
+
+        //if button is pressed then save location data in messageLocation
+        if(toggle == 1){
+            messageLocation += location.getLatitude() + ", " + location.getLongitude() + " / ";
+        }
+        // You can now create a LatLng Object for use with maps
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
-    @Override
-    public void onProviderDisabled(String provider) {
-        Toast.makeText(RealTimeAnimation.this, "Please Enable GPS and Internet", Toast.LENGTH_SHORT).show();
+    private boolean checkLocation() {
+        if(!isLocationEnabled())
+            showAlert();
+        return isLocationEnabled();
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    private void showAlert() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Enable Location")
+                .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
+                        "use this app")
+                .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
 
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+                    }
+                });
+        dialog.show();
     }
 
-    @Override
-    public void onProviderEnabled(String provider) {
-
+    private boolean isLocationEnabled() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
+
 
     //This code is for uploading the data to the server// -> Upload methods
     public class SendRequest extends AsyncTask<String, Void, String> {
