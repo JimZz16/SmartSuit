@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -67,6 +68,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
     private CheckBox box, sound, RangeSimpleView, file1, file2, file3;
     private RelativeLayout layout;
     private Button save, start;
+    private Handler handler = new Handler();
     private int getBottomM, getLeftM, getBottomC, getLeftC, getBottomH, getLeftH, PositionC7, PositionHead, pixelsSmall, pixelsSmall2;
     private final int BeginPos = -15;
     private final int BeginPosHead = -5;
@@ -78,7 +80,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
     private String messageSensors = "";
     private String messageLocation = "Coördinaten locatie: ";
     private GoogleApiClient mGoogleApiClient;
-
 
     public String urlnaam = "http://11502348.pxl-ea-ict.be/DataSmartSuit/CreateFileWrite.php";
 
@@ -152,8 +153,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
 
         locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 
-        checkLocation();
-
         //Animation blink start button
         Animation mAnimation = new AlphaAnimation(2, 0);
         mAnimation.setDuration(500);
@@ -171,7 +170,8 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
 
         setVisibilityRange();
         setRotation();
-        //checkPermissionLocation();
+        checkLocation();
+        saveSensorsData();
     }
 
     public void startButton(View view) {
@@ -266,7 +266,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aM++;
         textM.setText(Integer.toString(aM));
 
-        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderMidback(View view) {
@@ -274,7 +274,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aM--;
         textM.setText(Integer.toString(aM));
 
-        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void meerC7(View view) {
@@ -282,7 +282,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aC++;
         textC.setText(Integer.toString(aC));
 
-        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderC7(View view) {
@@ -290,7 +290,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aC--;
         textC.setText(Integer.toString(aC));
 
-        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void meerHead(View view) {
@@ -298,7 +298,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aH++;
         textH.setText(Integer.toString(aH));
 
-        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderHead(View view) {
@@ -306,7 +306,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aH--;
         textH.setText(Integer.toString(aH));
 
-        messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
 
@@ -651,6 +651,17 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         BaseH.setRotation(BeginPosHead);
     }
 
+    public void saveSensorsData(){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //mediaPlayer.stop();
+                messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
+                handler.postDelayed(this, 2500);       //added this line
+            }
+        }, 2500);
+    }
+
     public void save(View v) {
 
         if (toggle == 0) {
@@ -735,8 +746,8 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
     protected void startLocationUpdates() {
         // Create the location request
         mLocationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setInterval(1000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(500)
                 .setFastestInterval(1000); //After 1 second update location data
         // Request location updates
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
