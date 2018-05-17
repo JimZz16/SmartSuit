@@ -32,6 +32,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,10 +63,10 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
 
     private static final String TAG = "MainActivity";
     private ImageView MaxM, MinM, MaxC, MinC, MaxH, MinH, BaseM, BaseC, BaseH, dotM, dotC, dotH, logo;
-    private int aM, aC, aH, beginValueM, beginValueC, beginValueH, value = 0;
+    private int Mtest, aM, aC, aH, beginValueM, beginValueC, beginValueH, value = 0;
     private TextView textM, textC, textH, textMhide, textChide, textHhide, textMhideMax, textChideMax, textHhideMax, textMhideMin, textChideMin, textHhideMin;
     private EditText range;
-    private CheckBox box, sound, RangeSimpleView, file1, file2, file3;
+    private CheckBox box, sound, RangeSimpleView;
     private RelativeLayout layout;
     private Button save, start;
     private Handler handler = new Handler();
@@ -168,6 +169,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         getBottomH = ((ViewGroup.MarginLayoutParams) dotH.getLayoutParams()).bottomMargin;
         getLeftH = ((ViewGroup.MarginLayoutParams) dotH.getLayoutParams()).leftMargin;
 
+
         setVisibilityRange();
         setRotation();
         checkLocation();
@@ -266,7 +268,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aM++;
         textM.setText(Integer.toString(aM));
 
-        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderMidback(View view) {
@@ -274,7 +275,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aM--;
         textM.setText(Integer.toString(aM));
 
-        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void meerC7(View view) {
@@ -282,7 +282,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aC++;
         textC.setText(Integer.toString(aC));
 
-        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderC7(View view) {
@@ -290,7 +289,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aC--;
         textC.setText(Integer.toString(aC));
 
-        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void meerHead(View view) {
@@ -298,7 +296,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aH++;
         textH.setText(Integer.toString(aH));
 
-        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
     public void minderHead(View view) {
@@ -306,7 +303,6 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         aH--;
         textH.setText(Integer.toString(aH));
 
-        //messageSensors += Integer.toString(diffM) + " " + Integer.toString(diffC) + " " + Integer.toString(diffH) + "/";
     }
 
 
@@ -323,10 +319,10 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
                 ((ViewGroup.MarginLayoutParams) dotM.getLayoutParams()).bottomMargin = -((BeginPos - diff) + 15) * pixelsSmall + getBottomM;
 
             } else if (diff > 45) {
-                dotM.setRotation(BeginPos - 45);
+                dotM.setRotation(BeginPos - 45 * pixelsSmall);
                 textChide.setText("Current: " + Integer.toString(45));
             } else if (diff < -45) {
-                dotM.setRotation(BeginPos + 45);
+                dotM.setRotation(BeginPos + 45 * pixelsSmall);
                 textChide.setText("Current: " + Integer.toString(-45));
             }
         } else {
@@ -392,10 +388,10 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
 
                 ((ViewGroup.MarginLayoutParams) dotC.getLayoutParams()).bottomMargin = -((BeginPos - diff) + 15) * pixelsSmall + getBottomC;
             } else if (diff > 45) {
-                dotC.setRotation(BeginPos - 45);
+                dotC.setRotation(BeginPos - 45 * pixelsSmall);
                 textChide.setText("Current: " + Integer.toString(45));
             } else if (diff < -45) {
-                dotC.setRotation(BeginPos + 45);
+                dotC.setRotation(BeginPos + 45 * pixelsSmall);
                 textChide.setText("Current: " + Integer.toString(-45));
             }
         } else {
@@ -460,10 +456,10 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
 
                 ((ViewGroup.MarginLayoutParams) dotH.getLayoutParams()).bottomMargin = -((BeginPos - diff) + 15) * pixelsSmall + getBottomH;
             } else if (diff > 45) {
-                dotH.setRotation(BeginPosHead - 45);
+                dotH.setRotation(BeginPosHead - 45 * pixelsSmall);
                 textChide.setText("Current: " + Integer.toString(45));
             } else if (diff < -45) {
-                dotH.setRotation(BeginPosHead + 45);
+                dotH.setRotation(BeginPosHead + 45 * pixelsSmall);
                 textChide.setText("Current: " + Integer.toString(-45));
             }
         } else {
@@ -748,7 +744,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(500)
-                .setFastestInterval(1000); //After 1 second update location data
+                .setFastestInterval(1000); //After 1 second update location data - always 5 seconds?!
         // Request location updates
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -767,7 +763,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
 
         //if button is pressed then save location data in messageLocation
         if(toggle == 1){
-            messageLocation += location.getLatitude() + ", " + location.getLongitude() + " / ";
+            messageLocation += location.getLatitude() + ", " + location.getLongitude() + "/";
         }
         // You can now create a LatLng Object for use with maps
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -782,8 +778,8 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
     private void showAlert() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Enable Location")
-                .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
-                        "use this app")
+                .setMessage("Your Locations Settings is set to 'Off', please enable location to " +
+                        "use this function")
                 .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
