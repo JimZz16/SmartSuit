@@ -9,20 +9,7 @@
 
     <include
         android:id="@+id/app_bar"
-        layout="@layout/app_bar">
-    </include>
-
-    <Button
-        android:id="@+id/load"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="145dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/oval"
-        android:onClick="load"
-        android:text="Load"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+        layout="@layout/app_bar"></include>
 
 
     <Button
@@ -38,34 +25,118 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-    <TextView
-        android:id="@+id/TextField"
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginTop="10dp"
-        android:scrollbars="vertical"
-        android:textAlignment="center"
-        android:textColor="@android:color/background_dark"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <CheckBox
+        android:id="@+id/deleteorload"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="10dp"
-        android:scrollbars="vertical"
-        android:text=" Midback  C7  Head"
-        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:text="Show all files in FTP server"
         android:textColor="@android:color/background_dark"
-        android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/load" />
+        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutInternal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="65dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/TextField"
+            android:layout_width="match_parent"
+            android:layout_height="380dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="10dp"
+            android:scrollbars="vertical"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="7dp"
+            android:scrollbars="vertical"
+            android:text=" Midback C7 Head/ Location"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button5" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="145dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/oval"
+            android:onClick="load"
+            android:text="Load"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutDelete"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="65dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="85dp"
+            android:background="@drawable/oval"
+            android:onClick="send"
+            android:text="Load"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="91dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="85dp"
+            android:background="@drawable/oval"
+            android:onClick="delete"
+            android:text="Delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="175dp"
+            android:layout_height="400dp"
+            android:layout_marginStart="94dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/background_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="175dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="93dp"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:hint="Delete file here"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/delete" />
+    </android.support.constraint.ConstraintLayout>
 
 
 </android.support.constraint.ConstraintLayout>
