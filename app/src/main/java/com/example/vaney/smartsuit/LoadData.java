@@ -1,5 +1,7 @@
 package com.example.vaney.smartsuit;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
@@ -72,6 +74,8 @@ public class LoadData extends AppCompatActivity {
                 }
             }
         });
+
+        textView.setTextIsSelectable(true);
     }
 
     public void load(View v) {
@@ -119,6 +123,7 @@ public class LoadData extends AppCompatActivity {
     public void delete(View view){
         new SendRequest().execute();
         num = 2;
+        editText.setText("");
     }
 
     public class SendRequest extends AsyncTask<String, Void, String> {
