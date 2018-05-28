@@ -741,7 +741,7 @@ public class RealTimeAnimation extends AppCompatActivity implements GoogleApiCli
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(1000)
-                .setFastestInterval(4000); //After 1 second update location data - always 5 seconds?!
+                .setFastestInterval(5000); //After 1 second update location data - always 5 seconds?!
         // Request location updates
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
